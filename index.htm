@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Physics Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            position: relative;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+        }
+        footer {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            font-size: 14px;
+        }
+
+        .background-animation {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: -1;
+        }
+
+        .bubble {
+            position: absolute;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            animation: rise 10s infinite ease-in;
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+        }
+
+        @keyframes rise {
+            0% {
+                transform: translateY(100vh) scale(0.5);
+                opacity: 0;
+            }
+            50% {
+                opacity: 0.7;
+            }
+            100% {
+                transform: translateY(-10vh) scale(1.5);
+                opacity: 0;
+            }
+        }
+
+        .calculator {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+            width: 380px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 1s ease;
+        }
+        .calculator h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #444;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        button {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        button:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+        }
+        .tabs {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 20px;
+        }
+        .tab {
+            cursor: pointer;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background: rgba(100, 100, 100, 0.1);
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .tab:hover {
+            transform: translateY(-5px);
+        }
+        .tab.active {
+            background: linear-gradient(135deg, #6a11cb, #2575fc);
+            color: #fff;
+        }
+        .form-section {
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation">
+        <div class="bubble" style="width: 40px; height: 40px; left: 10%; animation-duration: 8s;"></div>
+        <div class="bubble" style="width: 60px; height: 60px; left: 30%; animation-duration: 10s;"></div>
+        <div class="bubble" style="width: 80px; height: 80px; left: 50%; animation-duration: 12s;"></div>
+        <div class="bubble" style="width: 50px; height: 50px; left: 70%; animation-duration: 9s;"></div>
+        <div class="bubble" style="width: 30px; height: 30px; left: 90%; animation-duration: 7s;"></div>
+    </div>
+    <div class="calculator">
+        <h1>Physics Calculator</h1>
+        <div class="tabs">
+            <div class="tab active" onclick="showSection('force')">Calculate Force</div>
+            <div class="tab" onclick="showSection('mass')">Calculate Mass</div>
+            <div class="tab" onclick="showSection('acceleration')">Calculate Acceleration</div>
+        </div>
+        <div id="force" class="form-section active">
+            <div class="form-group">
+                <label for="mass-force">Mass (kg):</label>
+                <input type="number" id="mass-force" placeholder="Enter mass">
+            </div>
+            <div class="form-group">
+                <label for="acceleration-force">Acceleration (m/s²):</label>
+                <input type="number" id="acceleration-force" placeholder="Enter acceleration">
+            </div>
+            <button onclick="calculateForce()">Calculate Force</button>
+            <div class="result" id="result-force"></div>
+        </div>
+        <div id="mass" class="form-section">
+            <div class="form-group">
+                <label for="force-mass">Force (N):</label>
+                <input type="number" id="force-mass" placeholder="Enter force">
+            </div>
+            <div class="form-group">
+                <label for="acceleration-mass">Acceleration (m/s²):</label>
+                <input type="number" id="acceleration-mass" placeholder="Enter acceleration">
+            </div>
+            <button onclick="calculateMass()">Calculate Mass</button>
+            <div class="result" id="result-mass"></div>
+        </div>
+        <div id="acceleration" class="form-section">
+            <div class="form-group">
+                <label for="force-acceleration">Force (N):</label>
+                <input type="number" id="force-acceleration" placeholder="Enter force">
+            </div>
+            <div class="form-group">
+                <label for="mass-acceleration">Mass (kg):</label>
+                <input type="number" id="mass-acceleration" placeholder="Enter mass">
+            </div>
+            <button onclick="calculateAcceleration()">Calculate Acceleration</button>
+            <div class="result" id="result-acceleration"></div>
+        </div>
+    </div>
+    <footer>
+        &copy; 2024 Physics Calculator | Eng: Ahmed Hossam
+    </footer>
+    <script>
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.form-section');
+            const tabs = document.querySelectorAll('.tab');
+            sections.forEach(section => section.classList.remove('active'));
+            tabs.forEach(tab => tab.classList.remove('active'));
+            document.getElementById(sectionId).classList.add('active');
+            document.querySelector(`[onclick="showSection('${sectionId}')"]`).classList.add('active');
+        }
+
+        function calculateForce() {
+            const mass = parseFloat(document.getElementById('mass-force').value);
+            const acceleration = parseFloat(document.getElementById('acceleration-force').value);
+
+            if (isNaN(mass) || isNaN(acceleration)) {
+                document.getElementById('result-force').textContent = 'Please enter valid numbers for both mass and acceleration.';
+                return;
+            }
+
+            const force = mass * acceleration;
+            document.getElementById('result-force').textContent = `Force = ${force.toFixed(2)} N`;
+        }
+
+        function calculateMass() {
+            const force = parseFloat(document.getElementById('force-mass').value);
+            const acceleration = parseFloat(document.getElementById('acceleration-mass').value);
+
+            if (isNaN(force) || isNaN(acceleration) || acceleration === 0) {
+                document.getElementById('result-mass').textContent = 'Please enter valid numbers for force and acceleration (acceleration must not be zero).';
+                return;
+            }
+
+            const mass = force / acceleration;
+            document.getElementById('result-mass').textContent = `Mass = ${mass.toFixed(2)} kg`;
+        }
+
+        function calculateAcceleration() {
+            const force = parseFloat(document.getElementById('force-acceleration').value);
+            const mass = parseFloat(document.getElementById('mass-acceleration').value);
+
+            if (isNaN(force) || isNaN(mass) || mass === 0) {
+                document.getElementById('result-acceleration').textContent = 'Please enter valid numbers for force and mass (mass must not be zero).';
+                return;
+            }
+
+            const acceleration = force / mass;
+            document.getElementById('result-acceleration').textContent = `Acceleration = ${acceleration.toFixed(2)} m/s²`;
+        }
+    </script>
+</body>
+</html>
